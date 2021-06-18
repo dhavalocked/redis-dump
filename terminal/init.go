@@ -19,12 +19,13 @@ func Execute() {
 
 var pattern string
 var scanCount, report, exportRoutines, pushRoutines int
+var override bool
 
 var copyCmd = &cobra.Command{
 	Use:  "copy sourceRedis targetRedis",
 	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		copier(cmd, args, pattern, scanCount, exportRoutines, pushRoutines)
+		copier(cmd, args, pattern, scanCount, exportRoutines, pushRoutines, override)
 	},
 }
 
@@ -39,4 +40,6 @@ func init() {
 	copyCmd.Flags().IntVar(&exportRoutines, "dumpThreads", 100, "")
 	// total threads i want to restore ?
 	copyCmd.Flags().IntVar(&pushRoutines, "restoreThreads", 100, "")
+	// Do i want to override the keys if it exist in destination?
+	copyCmd.Flags().BoolVar(&override, "overrideKey", false, "")
 }

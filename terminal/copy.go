@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func copier(cmd *cobra.Command, args []string, pattern string, scanCount int, exportRoutines int, pushRoutines int) {
+func copier(cmd *cobra.Command, args []string, pattern string, scanCount int, exportRoutines int, pushRoutines int, overrideKey bool) {
 	fmt.Println("======== STARATING =========")
 
 	clientSource, err := radix.DefaultClientFunc("tcp", args[0])
@@ -44,7 +44,7 @@ func copier(cmd *cobra.Command, args []string, pattern string, scanCount int, ex
 
 	// Log it every 5 seconds
 	statusReporter.Start(time.Second * time.Duration(5))
-	redisPusher.Start(waitingGroup, pushRoutines)
+	redisPusher.Start(waitingGroup, pushRoutines, overrideKey)
 	redisScanner.Start()
 
 	waitingGroup.Wait()
