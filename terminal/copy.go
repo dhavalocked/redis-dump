@@ -13,12 +13,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func copier(cmd *cobra.Command, args []string, pattern string) {
+func copier(cmd *cobra.Command, args []string, pattern string, scanCount int, exportRoutines int, pushRoutines int) {
 	fmt.Println("======== STARATING =========")
-
-	scanCount := 1000
-	exportRoutines := 300
-	pushRoutines := 300
 
 	clientSource, err := radix.DefaultClientFunc("tcp", args[0])
 	if err != nil {

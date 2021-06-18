@@ -18,12 +18,13 @@ func Execute() {
 }
 
 var pattern string
+var scanCount, report, exportRoutines, pushRoutines int
 
 var copyCmd = &cobra.Command{
 	Use:  "copy sourceRedis targetRedis",
 	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		copier(cmd, args, pattern)
+		copier(cmd, args, pattern, scanCount, exportRoutines, pushRoutines)
 	},
 }
 
@@ -32,4 +33,10 @@ func init() {
 
 	// pattern to search for
 	copyCmd.Flags().StringVar(&pattern, "queryString", "*", "")
+	// how much should i scan at once?
+	copyCmd.Flags().IntVar(&scanCount, "scanLimit", 1000, "")
+	// total threads i want to dump ?
+	copyCmd.Flags().IntVar(&exportRoutines, "dumpThreads", 100, "")
+	// total threads i want to restore ?
+	copyCmd.Flags().IntVar(&pushRoutines, "restoreThreads", 100, "")
 }
