@@ -55,7 +55,7 @@ func (p *RedisPusher) pushRoutine(overrideKey bool, timeout int, wg *sync.WaitGr
 		}
 
 		// add timeout of 10ms
-		time.Sleep(20)
+		time.Sleep(20 * time.Millisecond)
 	}
 
 	wg.Done()
