@@ -39,6 +39,7 @@ func (p *RedisPusher) pushRoutine(overrideKey bool, wg *sync.WaitGroup) {
 			err := p.client.Do(radix.FlatCmd(nil, "RESTORE", dump.Key, dump.Ttl, dump.Value, "REPLACE"))
 			if err != nil {
 				fmt.Println("Got error while Restoring key %s on destination", dump.Key)
+				fmt.Println(err)
 			}
 		} else {
 			err := p.client.Do(radix.FlatCmd(nil, "RESTORE", dump.Key, dump.Ttl, dump.Value))
@@ -47,6 +48,7 @@ func (p *RedisPusher) pushRoutine(overrideKey bool, wg *sync.WaitGroup) {
 					fmt.Println("%s Key already exist.. ignoring ", dump.Key)
 				} else {
 					fmt.Println("Got error while Restoring key %s on destination", dump.Key)
+					fmt.Println(err)
 				}
 			}
 		}
