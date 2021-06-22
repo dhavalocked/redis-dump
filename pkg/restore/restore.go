@@ -5,6 +5,7 @@ import (
 	"redis-dump/pkg/logger"
 	"redis-dump/pkg/scanner"
 	"sync"
+	"time"
 
 	"github.com/mediocregopher/radix/v3"
 )
@@ -23,15 +24,15 @@ type RedisPusher struct {
 	dumpChannel <-chan scanner.KeyDump
 }
 
-func (p *RedisPusher) Start(wg *sync.WaitGroup, number int, overrideKey bool) {
+func (p *RedisPusher) Start(wg *sync.WaitGroup, number int, overrideKey bool, timeout int) {
 	wg.Add(number)
 	for i := 0; i < number; i++ {
-		go p.pushRoutine(overrideKey, wg)
+		go p.pushRoutine(overrideKey, timeout, wg)
 	}
 
 }
 
-func (p *RedisPusher) pushRoutine(overrideKey bool, wg *sync.WaitGroup) {
+func (p *RedisPusher) pushRoutine(overrideKey bool, timeout int, wg *sync.WaitGroup) {
 	for dump := range p.dumpChannel {
 		p.reporter.AddCounter(1)
 
@@ -53,6 +54,8 @@ func (p *RedisPusher) pushRoutine(overrideKey bool, wg *sync.WaitGroup) {
 			}
 		}
 
+		// add timeout of 10ms
+		time.Sleep(20)
 	}
 
 	wg.Done()
