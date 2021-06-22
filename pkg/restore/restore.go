@@ -45,11 +45,17 @@ func (p *RedisPusher) pushRoutine(overrideKey bool, timeout int, wg *sync.WaitGr
 		} else {
 			err := p.client.Do(radix.FlatCmd(nil, "RESTORE", dump.Key, dump.Ttl, dump.Value))
 			if err != nil {
-				if err.Error() == "BUSYKEY Target key name already exists" {
-					fmt.Println("%s Key already exist.. ignoring ", dump.Key)
-				} else {
-					fmt.Println("Got error while Restoring key %s on destination", dump.Key)
-					fmt.Println(err)
+				err1 := p.client.Do(radix.FlatCmd(nil, "RESTORE", dump.Key, dump.Ttl, dump.Value))
+				if err1 != nil {
+					err2 := p.client.Do(radix.FlatCmd(nil, "RESTORE", dump.Key, dump.Ttl, dump.Value))
+					if err2 != nil {
+						if err2.Error() == "BUSYKEY Target key name already exists" {
+							fmt.Println("%s Key already exist.. ignoring ", dump.Key)
+						} else {
+							fmt.Println("Got error while Restoring key %s on destination", dump.Key)
+							fmt.Println(err2)
+						}
+					}
 				}
 			}
 		}
