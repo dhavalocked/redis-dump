@@ -5,7 +5,6 @@ import (
 	"redis-dump/pkg/logger"
 	"redis-dump/pkg/scanner"
 	"sync"
-	"time"
 
 	"github.com/mediocregopher/radix/v3"
 )
@@ -61,7 +60,7 @@ func (p *RedisPusher) pushRoutine(overrideKey bool, timeout int, wg *sync.WaitGr
 		}
 
 		// add timeout of 10ms
-		time.Sleep(20 * time.Millisecond)
+		//time.Sleep(20 * time.Millisecond)
 	}
 
 	wg.Done()
